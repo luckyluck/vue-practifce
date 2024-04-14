@@ -1,19 +1,21 @@
-<script>
-export default {
-  name: 'TheHeader',
-  computed: {
-    isLoggedIn() {
-      return this.$store.getters['isAuthenticated'];
-    },
-  },
-  methods: {
-    logout() {
-      this.$store.dispatch('logout');
+<script setup lang="ts">
+import { computed } from 'vue'
+// @ts-ignore
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-      this.$router.replace('/coaches');
-    }
-  }
-};
+const store = useStore()
+const router = useRouter()
+
+function logout() {
+  store.dispatch('logout')
+
+  router.replace('/coaches')
+}
+
+const isLoggedIn = computed(() => {
+  return store.getters['isAuthenticated']
+})
 </script>
 
 <template>

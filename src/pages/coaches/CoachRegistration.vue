@@ -1,28 +1,29 @@
-<script>
-import CoachForm from '@/components/coaches/CoachForm.vue';
+<script setup lang="ts">
+// @ts-ignore
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'CoachRegistration',
-  components: { CoachForm },
-  methods: {
-    saveData(data) {
-      this.$store.dispatch('coaches/registerCoach', data);
+import CoachForm from '@/components/coaches/CoachForm.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
 
-      this.$router.replace('/coaches');
-    }
-  }
-};
+const store = useStore()
+const router = useRouter()
+
+// @ts-ignore
+function saveData(data) {
+  store.dispatch('coaches/registerCoach', data)
+
+  router.replace('/coaches')
+}
 </script>
 
 <template>
   <section>
-    <base-card>
+    <BaseCard>
       <h2>Register as a Coach</h2>
-      <coach-form @save-data="saveData"></coach-form>
-    </base-card>
+      <CoachForm @save-data="saveData"></CoachForm>
+    </BaseCard>
   </section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

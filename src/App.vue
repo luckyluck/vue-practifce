@@ -1,17 +1,19 @@
-<script>
-import TheHeader from '@/components/layout/TheHeader.vue';
+<script setup lang="ts">
+import { onMounted } from 'vue'
+// @ts-ignore
+import { useStore } from 'vuex'
 
-export default {
-  name: 'App',
-  components: { TheHeader },
-  created() {
-    this.$store.dispatch('autoLogin');
-  }
-};
+import TheHeader from '@/components/layout/TheHeader.vue'
+
+onMounted(() => {
+  const store = useStore()
+
+  store.dispatch('autoLogin')
+})
 </script>
 
 <template>
-  <the-header></the-header>
+  <TheHeader></TheHeader>
   <router-view v-slot="{ Component }">
     <transition name="route" mode="out-in">
       <component :is="Component"></component>
@@ -20,14 +22,14 @@ export default {
 </template>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 * {
   box-sizing: border-box;
 }
 
 html {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -39,7 +41,7 @@ body {
   transform: translateY(-30px);
 }
 .route-enter-active {
-  transition: all .3s ease-out;
+  transition: all 0.3s ease-out;
 }
 .route-enter-to,
 .route-leave-from {
@@ -47,11 +49,10 @@ body {
   transform: translateY(0);
 }
 .route-leave-active {
-  transition: all .3s ease-out;
+  transition: all 0.3s ease-out;
 }
 .route-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
-
 </style>

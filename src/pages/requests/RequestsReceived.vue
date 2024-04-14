@@ -1,70 +1,65 @@
-<script>
-import RequestItem from '@/components/requests/RequestItem.vue';
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+// @ts-ignore
+import { useStore } from 'vuex'
 
-export default {
-  name: 'RequestsReceived',
-  components: {
-    RequestItem,
-  },
-  data() {
-    return {
-      isLoading: false,
-      error: null,
-    };
-  },
-  computed: {
-    receivedRequests() {
-      return this.$store.getters['requests/requests'];
-    },
-    hasRequests() {
-      return this.$store.getters['requests/hasRequests'];
-    }
-  },
-  methods: {
-    handleError() {
-      this.error = null;
-    },
-    async loadRequests() {
-      this.isLoading = true;
+import RequestItem from '@/components/requests/RequestItem.vue'
+import BaseDialog from '@/components/ui/BaseDialog.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseSpinner from '@/components/ui/BaseSpinner.vue'
 
-      try {
-        await this.$store.dispatch('requests/loadRequests');
-      } catch (e) {
-        this.error = e.message || 'Something went wrong!';
-      }
+const store = useStore()
 
-      this.isLoading = false;
-    }
-  },
-  created() {
-    this.loadRequests();
+const isLoading = ref(false)
+const error = ref(null)
+
+const receivedRequests = computed(() => store.getters['requests/requests'])
+const hasRequests = computed(() => store.getters['requests/hasRequests'])
+
+function handleError() {
+  error.value = null
+}
+async function loadRequests() {
+  isLoading.value = true
+
+  try {
+    await store.dispatch('requests/loadRequests')
+  } catch (e) {
+    // @ts-ignore
+    error.value = e.message || 'Something went wrong!'
   }
-};
+
+  isLoading.value = false
+}
+
+onMounted(() => {
+  loadRequests()
+})
 </script>
 
 <template>
   <div>
-    <base-dialog :show="!!error" title="An error occurred!" @close="handleError">
+    <BaseDialog :show="!!error" title="An error occurred!" @close="handleError">
       <p>{{ error }}</p>
-    </base-dialog>
+    </BaseDialog>
     <section>
-      <base-card>
+      <BaseCard>
         <header>
           <h2>Requests Received</h2>
         </header>
         <div v-if="isLoading">
-          <BaseSpinner></BaseSpinner>
+          <BaseSpinner />
         </div>
         <ul v-else-if="hasRequests">
-          <request-item
+          <RequestItem
             v-for="request in receivedRequests"
             :email="request.userEmail"
             :message="request.message"
             :key="request.id"
-          ></request-item>
+          ></RequestItem>
         </ul>
         <h3 v-else>You haven't received any requests yet!</h3>
-      </base-card>
+      </BaseCard>
     </section>
   </div>
 </template>

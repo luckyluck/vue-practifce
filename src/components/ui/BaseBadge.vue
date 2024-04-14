@@ -1,13 +1,8 @@
-<script>
-export default {
-  name: 'BaseBadge',
-  props: ['title', 'type'],
-  computed: {
-    text() {
-      return this.title.toUpperCase();
-    }
-  }
-};
+<script setup lang="ts">
+import { defineProps, computed } from 'vue'
+
+const props = defineProps(['title', 'type'])
+const text = computed(() => props.title.toUpperCase())
 </script>
 
 <template>

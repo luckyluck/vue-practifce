@@ -1,24 +1,23 @@
-<script>
-export default {
-  name: 'BaseButton',
-  props: {
-    link: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    to: {
-      type: String,
-      required: false,
-      default: '/'
-    },
-    mode: {
-      type: String,
-      required: false,
-      default: null
-    }
+<script setup lang="ts">
+import { defineProps } from 'vue'
+
+defineProps({
+  link: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  to: {
+    type: String,
+    required: false,
+    default: '/'
+  },
+  mode: {
+    type: String,
+    required: false,
+    default: null
   }
-};
+})
 </script>
 
 <template>

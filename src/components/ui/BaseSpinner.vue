@@ -1,9 +1,3 @@
-<script>
-export default {
-  name: 'BaseSpinner'
-};
-</script>
-
 <template>
   <div class="spinner">
     <div class="lds-roller">
@@ -38,7 +32,7 @@ export default {
   transform-origin: 40px 40px;
 }
 .lds-roller div:after {
-  content: " ";
+  content: ' ';
   display: block;
   position: absolute;
   width: 7px;

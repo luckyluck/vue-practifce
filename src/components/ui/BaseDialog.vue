@@ -1,31 +1,31 @@
-<script>
-export default {
-  name: 'BaseDialog',
-  props: {
-    show: {
-      type: Boolean,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: false,
-    },
-    fixed: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+
+const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true
   },
-  emits: ['close'],
-  methods: {
-    tryClose() {
-      if (this.fixed) {
-        return;
-      }
-      this.$emit('close');
-    },
+  title: {
+    type: String,
+    required: false
   },
-};
+  fixed: {
+    type: Boolean,
+    required: false,
+    default: false
+  }
+})
+const emit = defineEmits(['close'])
+
+function tryClose() {
+  if (props.fixed) {
+    return
+  }
+
+  emit('close')
+}
 </script>
 
 <template>
@@ -43,7 +43,7 @@ export default {
         </section>
         <menu v-if="!fixed">
           <slot name="actions">
-            <base-button @click="tryClose">Close</base-button>
+            <BaseButton @click="tryClose">Close</BaseButton>
           </slot>
         </menu>
       </dialog>
@@ -106,11 +106,11 @@ menu {
 }
 
 .dialog-enter-active {
-  transition: all .3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .dialog-leave-active {
-  transition: all .3s ease-in;
+  transition: all 0.3s ease-in;
 }
 
 .dialog.enter-to,

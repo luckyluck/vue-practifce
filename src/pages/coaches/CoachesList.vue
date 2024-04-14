@@ -1,88 +1,86 @@
-<script>
-import CoachItem from '@/components/coaches/CoachItem.vue';
-import CoachFilter from '@/components/coaches/CoachFilter.vue';
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+// @ts-ignore
+import { useStore } from 'vuex'
 
-export default {
-  name: 'CoachesList',
-  components: {
-    CoachFilter,
-    CoachItem
-  },
-  data() {
-    return {
-      activeFilters: {
-        frontend: true,
-        backend: true,
-        career: true,
-      },
-      isLoading: false,
-      error: null,
-    };
-  },
-  computed: {
-    filteredCoaches() {
-      const coaches = this.$store.getters['coaches/coaches'];
+import CoachItem from '@/components/coaches/CoachItem.vue'
+import CoachFilter from '@/components/coaches/CoachFilter.vue'
+import BaseDialog from '@/components/ui/BaseDialog.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseSpinner from '@/components/ui/BaseSpinner.vue'
 
-      return coaches.filter(coach => coach.areas.some(area => this.activeFilters[area]));
-    },
-    hasCoaches() {
-      return this.$store.getters['coaches/hasCoaches']
-    },
-    isCoach() {
-      return this.$store.getters['coaches/isCoach'];
-    },
-    isLoggedIn() {
-      return this.$store.getters['isAuthenticated'];
-    },
-    canRegister() {
-      return this.isLoggedIn && !this.isCoach && !this.isLoading;
-    }
-  },
-  methods: {
-    handleError() {
-      this.error = null;
-    },
-    setFilters(updatedFilters) {
-      this.activeFilters = updatedFilters;
-    },
-    async loadCoaches(forceRefresh = false) {
-      this.isLoading = true;
+const store = useStore()
 
-      try {
-        await this.$store.dispatch('coaches/loadCoaches', { forceRefresh });
-      } catch (e) {
-        this.error = e.message || 'Something went wrong!';
-      }
+const activeFilters = ref({
+  frontend: true,
+  backend: true,
+  career: true
+})
+const isLoading = ref(false)
+const error = ref(null)
 
-      this.isLoading = false;
-    }
-  },
-  created() {
-    this.loadCoaches();
+const filteredCoaches = computed(() => {
+  const coaches = store.getters['coaches/coaches']
+
+  return coaches.filter((coach: any) =>
+    // @ts-ignore
+    coach.areas.some((area: string) => activeFilters.value[area as any])
+  )
+})
+const hasCoaches = computed(() => store.getters['coaches/hasCoaches'])
+const isCoach = computed(() => store.getters['coaches/isCoach'])
+const isLoggedIn = computed(() => store.getters['isAuthenticated'])
+const canRegister = computed(() => isLoggedIn.value && !isCoach.value && !isLoading.value)
+
+function handleError() {
+  error.value = null
+}
+// @ts-ignore
+function setFilters(updatedFilters) {
+  activeFilters.value = updatedFilters
+}
+
+async function loadCoaches(forceRefresh = false) {
+  isLoading.value = true
+
+  try {
+    await store.dispatch('coaches/loadCoaches', { forceRefresh })
+  } catch (e) {
+    // @ts-ignore
+    error.value = e.message || 'Something went wrong!'
   }
-};
+
+  isLoading.value = false
+}
+
+onMounted(() => {
+  loadCoaches()
+})
 </script>
 
 <template>
   <div>
-    <base-dialog :show="!!error" title="An error occurred!" @close="handleError">
+    <BaseDialog :show="!!error" title="An error occurred!" @close="handleError">
       <p>{{ error }}</p>
-    </base-dialog>
+    </BaseDialog>
     <section>
-      <coach-filter @change-filter="setFilters"></coach-filter>
+      <CoachFilter @change-filter="setFilters"></CoachFilter>
     </section>
     <section>
-      <base-card>
+      <BaseCard>
         <div class="controls">
-          <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
-          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn">Login to Register as a Coach</base-button>
-          <base-button link to="/register" v-if="canRegister">Register as Coach</base-button>
+          <BaseButton mode="outline" @click="loadCoaches(true)">Refresh</BaseButton>
+          <BaseButton link to="/auth?redirect=register" v-if="!isLoggedIn"
+            >Login to Register as a Coach</BaseButton
+          >
+          <BaseButton link to="/register" v-if="canRegister">Register as Coach</BaseButton>
         </div>
         <div v-if="isLoading">
-          <base-spinner></base-spinner>
+          <BaseSpinner />
         </div>
         <ul v-else-if="hasCoaches">
-          <coach-item
+          <CoachItem
             v-for="coach in filteredCoaches"
             :key="coach.id"
             :id="coach.id"
@@ -90,10 +88,10 @@ export default {
             :last-name="coach.lastName"
             :rate="coach.hourlyRate"
             :areas="coach.areas"
-          ></coach-item>
+          />
         </ul>
         <h3 v-else>No Coaches Found</h3>
-      </base-card>
+      </BaseCard>
     </section>
   </div>
 </template>

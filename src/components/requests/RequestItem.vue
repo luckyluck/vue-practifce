@@ -1,13 +1,8 @@
-<script>
-export default {
-  name: 'RequestItem',
-  props: ['email', 'message'],
-  computed: {
-    emailLink() {
-      return `emailto:${this.email}`;
-    }
-  }
-};
+<script setup lang="ts">
+import { defineProps, computed } from 'vue'
+
+const props = defineProps(['email', 'message'])
+const emailLink = computed(() => `emailto:${props.email}`)
 </script>
 
 <template>

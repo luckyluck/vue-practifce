@@ -1,47 +1,45 @@
-<script>
-export default {
-  name: 'CoachFilter',
-  emits: ['change-filter'],
-  data() {
-    return {
-      filters: {
-        frontend: true,
-        backend: true,
-        career: true,
-      }
-    };
-  },
-  methods: {
-    setFilter(event) {
-      const inputId = event.target.id;
-      const isChecked = event.target.checked;
+<script setup lang="ts">
+import { ref, defineEmits } from 'vue'
 
-      this.filters = {
-        ...this.filters,
-        [inputId]: isChecked,
-      };
-      this.$emit('change-filter', this.filters)
-    }
+const emit = defineEmits(['change-filter'])
+
+import BaseCard from '@/components/ui/BaseCard.vue'
+
+const filters = ref({
+  frontend: true,
+  backend: true,
+  career: true
+})
+
+// @ts-ignore
+function setFilter(event) {
+  const inputId = event.target.id
+  const isChecked = event.target.checked
+
+  filters.value = {
+    ...filters.value,
+    [inputId]: isChecked
   }
-};
+  emit('change-filter', filters.value)
+}
 </script>
 
 <template>
-  <base-card>
+  <BaseCard>
     <h2>Find Your Coach</h2>
     <span class="filter-option">
-      <input type="checkbox" id="frontend" :checked="filters.frontend" @change="setFilter">
+      <input type="checkbox" id="frontend" :checked="filters.frontend" @change="setFilter" />
       <label for="frontend">Frontend</label>
     </span>
     <span class="filter-option">
-      <input type="checkbox" id="backend" :checked="filters.backend" @change="setFilter">
+      <input type="checkbox" id="backend" :checked="filters.backend" @change="setFilter" />
       <label for="backend">Backend</label>
     </span>
     <span class="filter-option">
-      <input type="checkbox" id="career" :checked="filters.career" @change="setFilter">
+      <input type="checkbox" id="career" :checked="filters.career" @change="setFilter" />
       <label for="career">Career</label>
     </span>
-  </base-card>
+  </BaseCard>
 </template>
 
 <style scoped>

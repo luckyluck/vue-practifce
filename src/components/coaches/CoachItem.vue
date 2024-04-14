@@ -1,23 +1,17 @@
-<script>
-import BaseButton from '@/components/ui/BaseButton.vue';
-import BaseBadge from '@/components/ui/BaseBadge.vue';
+<script setup lang="ts">
+import { defineProps, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-export default {
-  name: 'CoachItem',
-  components: { BaseBadge, BaseButton },
-  props: ['id', 'firstName', 'lastName', 'rate', 'areas'],
-  computed: {
-    fullName() {
-      return `${this.firstName} ${this.lastName}`;
-    },
-    coachContactLink() {
-      return `${this.$route.path}/${this.id}/contact`;
-    },
-    coachDetailsLink() {
-      return `${this.$route.path}/${this.id}`;
-    }
-  }
-};
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseBadge from '@/components/ui/BaseBadge.vue'
+
+const props = defineProps(['id', 'firstName', 'lastName', 'rate', 'areas'])
+
+const route = useRoute()
+
+const fullName = computed(() => `${props.firstName} ${props.lastName}`)
+const coachContactLink = computed(() => `${route.path}/${props.id}/contact`)
+const coachDetailsLink = computed(() => `${route.path}/${props.id}`)
 </script>
 
 <template>
@@ -25,11 +19,11 @@ export default {
     <h3>{{ fullName }}</h3>
     <h4>${{ rate }}/hour</h4>
     <div>
-      <base-badge v-for="area in areas" :key="area" :title="area" :type="area"></base-badge>
+      <BaseBadge v-for="area in areas" :key="area" :title="area" :type="area" />
     </div>
     <div class="actions">
-      <base-button link mode="outline" :to="coachContactLink">Contact</base-button>
-      <base-button link :to="coachDetailsLink">View Details</base-button>
+      <BaseButton link mode="outline" :to="coachContactLink">Contact</BaseButton>
+      <BaseButton link :to="coachDetailsLink">View Details</BaseButton>
     </div>
   </li>
 </template>

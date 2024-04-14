@@ -1,78 +1,87 @@
-<script>
-export default {
-  name: 'UserAuth',
-  data() {
-    return {
-      email: '',
-      password: '',
-      formIsValid: true,
-      mode: 'login',
-      isLoading: false,
-      error: null,
-    };
-  },
-  computed: {
-    submitButtonCaption() {
-      return this.mode === 'login' ? 'Login' : 'Signup';
-    },
-    switchModeButtonCaption() {
-      return this.mode === 'login' ? 'Signup instead' : 'Login instead';
-    }
-  },
-  methods: {
-    async submitForm() {
-      if (!this.email || !this.email.includes('@') || !this.password || this.password.length < 6) {
-        this.formIsValid = false;
-        return;
-      }
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+// @ts-ignore
+import { useStore } from 'vuex'
+import { useRouter, useRoute } from 'vue-router'
+import BaseDialog from '@/components/ui/BaseDialog.vue'
+import BaseSpinner from '@/components/ui/BaseSpinner.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 
-      this.isLoading = true;
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-      try {
-        await this.$store.dispatch(this.mode, { email: this.email, password: this.password });
+const email = ref('')
+const password = ref('')
+const formIsValid = ref(true)
+const mode = ref('login')
+const isLoading = ref(false)
+const error = ref(null)
 
-        // TODO verify if it still makes sense after introducing guards
-        const redirectUrl = this.$route.query.redirect ?? 'coaches';
-        this.$router.replace(`/${redirectUrl}`);
-      } catch (e) {
-        this.error = e.message;
-      }
+const submitButtonCaption = computed(() => (mode.value === 'login' ? 'Login' : 'Signup'))
+const switchModeButtonCaption = computed(() =>
+  mode.value === 'login' ? 'Signup instead' : 'Login instead'
+)
 
-      this.isLoading = false;
-    },
-    switchAuthMode() {
-      this.mode = this.mode === 'login' ? 'signup' : 'login';
-    },
-    handleError() {
-      this.error = null;
-    }
+function switchAuthMode() {
+  mode.value = mode.value === 'login' ? 'signup' : 'login'
+}
+
+function handleError() {
+  error.value = null
+}
+
+async function submitForm() {
+  if (!email.value || !email.value.includes('@') || !password.value || password.value.length < 6) {
+    formIsValid.value = false
+    return
   }
-};
+
+  isLoading.value = true
+
+  try {
+    await store.dispatch(mode.value, { email: email.value, password: password.value })
+
+    // TODO verify if it still makes sense after introducing guards
+    const redirectUrl = route.query.redirect ?? 'coaches'
+    router.replace(`/${redirectUrl}`)
+  } catch (e) {
+    // @ts-ignore
+    error.value = e.message
+  }
+
+  isLoading.value = false
+}
 </script>
 
 <template>
   <div>
-    <base-dialog fixed :show="!!error" title="Error occurred" @close="handleError">
+    <BaseDialog fixed :show="!!error" title="Error occurred" @close="handleError">
       <p>{{ error }}</p>
-    </base-dialog>
+    </BaseDialog>
     <base-dialog fixed :show="isLoading" title="Authenticating">
-      <base-spinner></base-spinner>
+      <BaseSpinner />
     </base-dialog>
-    <base-card>
+    <BaseCard>
       <form @submit.prevent="submitForm">
         <div class="form-control">
           <label for="email">E-mail</label>
-          <input type="email" id="email" v-model.trim="email">
+          <input type="email" id="email" v-model.trim="email" />
         </div>
         <div class="form-control">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model.trim="password">
+          <input type="password" id="password" v-model.trim="password" />
         </div>
-        <p v-if="formIsValid">Please enter a valid email and password (must be at least 6 characters long).</p>
-        <base-button>{{ submitButtonCaption }}</base-button>
-        <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
+        <p v-if="formIsValid">
+          Please enter a valid email and password (must be at least 6 characters long).
+        </p>
+        <BaseButton>{{ submitButtonCaption }}</BaseButton>
+        <BaseButton type="button" mode="flat" @click="switchAuthMode">{{
+          switchModeButtonCaption
+        }}</BaseButton>
       </form>
-    </base-card>
+    </BaseCard>
   </div>
 </template>
 

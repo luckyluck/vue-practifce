@@ -1,61 +1,59 @@
-<script>
-export default {
-  name: 'CoachDetails',
-  props: ['id'],
-  computed: {
-    fullName() {
-      return `${this.selectedCoach.firstName} ${this.selectedCoach.lastName}`;
-    },
-    coachContactLink() {
-      return `${this.$route.path}/${this.id}/contact`;
-    },
-    areas() {
-      return this.selectedCoach.areas;
-    },
-    rate() {
-      return this.selectedCoach.hourlyRate;
-    },
-    description() {
-      return this.selectedCoach.description;
-    }
-  },
-  data() {
-    return {
-      selectedCoach: null,
-    };
-  },
-  created() {
-    this.selectedCoach = this.$store.getters['coaches/coaches'].find(coach => coach.id === this.id);
-  }
-};
+<script setup lang="ts">
+import { defineProps, computed, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+// @ts-ignore
+import { useStore } from 'vuex'
+
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseBadge from '@/components/ui/BaseBadge.vue'
+
+const store = useStore()
+const route = useRoute()
+
+const props = defineProps(['id'])
+const selectedCoach = ref(null)
+
+const fullName = computed(
+  // @ts-ignore
+  () => `${selectedCoach.value?.firstName} ${selectedCoach.value?.lastName}`
+)
+const coachContactLink = computed(() => `${route.path}/${props.id}/contact`)
+// @ts-ignore
+const areas = computed(() => selectedCoach.value?.areas)
+// @ts-ignore
+const rate = computed(() => selectedCoach.value?.hourlyRate)
+// @ts-ignore
+const description = computed(() => selectedCoach.value?.description)
+
+onMounted(() => {
+  // @ts-ignore
+  selectedCoach.value = store.getters['coaches/coaches'].find((coach) => coach.id === props.id)
+})
 </script>
 
 <template>
   <div>
     <section>
-      <base-card>
+      <BaseCard>
         <h2>{{ fullName }}</h2>
         <h3>${{ rate }}/hour</h3>
-      </base-card>
+      </BaseCard>
     </section>
     <section>
-      <base-card>
+      <BaseCard>
         <header>
           <h2>Interested? Reach out now!</h2>
-          <base-button link :to="coachContactLink">Contact</base-button>
+          <BaseButton link :to="coachContactLink">Contact</BaseButton>
         </header>
         <router-view></router-view>
-      </base-card>
+      </BaseCard>
     </section>
     <section>
-      <base-card>
-        <base-badge v-for="area in areas" :key="area" :title="area" :type="area"></base-badge>
+      <BaseCard>
+        <BaseBadge v-for="area in areas" :key="area" :title="area" :type="area" />
         <p>{{ description }}</p>
-      </base-card>
+      </BaseCard>
     </section>
   </div>
 </template>
-
-<style scoped>
-
-</style>
