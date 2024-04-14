@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-// @ts-ignore
-import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import BaseDialog from '@/components/ui/BaseDialog.vue'
 import BaseSpinner from '@/components/ui/BaseSpinner.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { useAuthStore } from '@/stores'
 
-const store = useStore()
+const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -41,7 +40,11 @@ async function submitForm() {
   isLoading.value = true
 
   try {
-    await store.dispatch(mode.value, { email: email.value, password: password.value })
+    if (mode.value === 'login') {
+      await authStore.login({ email: email.value, password: password.value })
+    } else {
+      await authStore.signup({ email: email.value, password: password.value })
+    }
 
     // TODO verify if it still makes sense after introducing guards
     const redirectUrl = route.query.redirect ?? 'coaches'

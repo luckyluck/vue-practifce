@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-// @ts-ignore
-import { useStore } from 'vuex'
 
 import TheHeader from '@/components/layout/TheHeader.vue'
+import { useAuthStore } from '@/stores'
 
 onMounted(() => {
-  const store = useStore()
+  const authStore = useAuthStore()
 
-  store.dispatch('autoLogin')
+  authStore.autoLogin()
 })
 </script>
 

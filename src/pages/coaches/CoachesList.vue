@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-// @ts-ignore
-import { useStore } from 'vuex'
 
 import CoachItem from '@/components/coaches/CoachItem.vue'
 import CoachFilter from '@/components/coaches/CoachFilter.vue'
@@ -9,8 +7,10 @@ import BaseDialog from '@/components/ui/BaseDialog.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseSpinner from '@/components/ui/BaseSpinner.vue'
+import { useAuthStore, useCoachesStore } from '@/stores'
 
-const store = useStore()
+const coachesStore = useCoachesStore()
+const authStore = useAuthStore()
 
 const activeFilters = ref({
   frontend: true,
@@ -21,16 +21,16 @@ const isLoading = ref(false)
 const error = ref(null)
 
 const filteredCoaches = computed(() => {
-  const coaches = store.getters['coaches/coaches']
+  const coaches = coachesStore.coaches
 
   return coaches.filter((coach: any) =>
     // @ts-ignore
     coach.areas.some((area: string) => activeFilters.value[area as any])
   )
 })
-const hasCoaches = computed(() => store.getters['coaches/hasCoaches'])
-const isCoach = computed(() => store.getters['coaches/isCoach'])
-const isLoggedIn = computed(() => store.getters['isAuthenticated'])
+const hasCoaches = computed(() => coachesStore.hasCoaches)
+const isCoach = computed(() => coachesStore.isCoach)
+const isLoggedIn = computed(() => authStore.isAuthenticated)
 const canRegister = computed(() => isLoggedIn.value && !isCoach.value && !isLoading.value)
 
 function handleError() {
@@ -45,7 +45,7 @@ async function loadCoaches(forceRefresh = false) {
   isLoading.value = true
 
   try {
-    await store.dispatch('coaches/loadCoaches', { forceRefresh })
+    await coachesStore.loadCoaches(forceRefresh)
   } catch (e) {
     // @ts-ignore
     error.value = e.message || 'Something went wrong!'

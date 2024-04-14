@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-// @ts-ignore
-import { useStore } from 'vuex'
 
 import RequestItem from '@/components/requests/RequestItem.vue'
 import BaseDialog from '@/components/ui/BaseDialog.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseSpinner from '@/components/ui/BaseSpinner.vue'
+import { useRequestsStore } from '@/stores'
 
-const store = useStore()
+const requestsStore = useRequestsStore()
 
 const isLoading = ref(false)
 const error = ref(null)
 
-const receivedRequests = computed(() => store.getters['requests/requests'])
-const hasRequests = computed(() => store.getters['requests/hasRequests'])
+const receivedRequests = computed(() => requestsStore.requests)
+const hasRequests = computed(() => requestsStore.hasRequests)
 
 function handleError() {
   error.value = null
@@ -23,7 +22,7 @@ async function loadRequests() {
   isLoading.value = true
 
   try {
-    await store.dispatch('requests/loadRequests')
+    await requestsStore.loadRequests()
   } catch (e) {
     // @ts-ignore
     error.value = e.message || 'Something went wrong!'

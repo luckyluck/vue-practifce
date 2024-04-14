@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-// @ts-ignore
-import { useStore } from 'vuex'
 
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { useRequestsStore } from '@/stores'
 
 const router = useRouter()
 const route = useRoute()
-const store = useStore()
+const requestsStore = useRequestsStore()
 
 const email = ref('')
 const message = ref('')
@@ -24,12 +23,7 @@ function submitForm() {
     return
   }
 
-  store.dispatch('requests/contactCoach', {
-    // Another approach is to set props: true on router
-    coachId: route.params.id,
-    email: email.value,
-    message: message.value
-  })
+  requestsStore.contactCoach(email.value, message.value, route.params.id as string)
 
   router.replace('/coaches')
 }

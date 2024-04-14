@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { defineProps, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-// @ts-ignore
-import { useStore } from 'vuex'
 
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseBadge from '@/components/ui/BaseBadge.vue'
+import { useCoachesStore } from '@/stores'
 
-const store = useStore()
+const coachesStore = useCoachesStore()
 const route = useRoute()
 
 const props = defineProps(['id'])
@@ -28,7 +27,7 @@ const description = computed(() => selectedCoach.value?.description)
 
 onMounted(() => {
   // @ts-ignore
-  selectedCoach.value = store.getters['coaches/coaches'].find((coach) => coach.id === props.id)
+  selectedCoach.value = coachesStore.coaches.find((coach) => coach.id === props.id)
 })
 </script>
 
