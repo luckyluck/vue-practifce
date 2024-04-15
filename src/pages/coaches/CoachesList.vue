@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-
 import CoachItem from '@/components/coaches/CoachItem.vue'
 import CoachFilter from '@/components/coaches/CoachFilter.vue'
-import BaseDialog from '@/components/ui/BaseDialog.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseSpinner from '@/components/ui/BaseSpinner.vue'
 import { useAuthStore, useCoachesStore } from '@/stores'
 
 const coachesStore = useCoachesStore()

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
 
-import BaseButton from '@/components/ui/BaseButton.vue'
-
 const emit = defineEmits(['save-data'])
 const firstName = ref({ value: '', isValid: true })
 const lastName = ref({ value: '', isValid: true })

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-
 import RequestItem from '@/components/requests/RequestItem.vue'
-import BaseDialog from '@/components/ui/BaseDialog.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseSpinner from '@/components/ui/BaseSpinner.vue'
 import { useRequestsStore } from '@/stores'
 
 const requestsStore = useRequestsStore()

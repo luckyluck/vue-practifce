@@ -2,9 +2,6 @@
 import { defineProps, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
-
 const props = defineProps(['id', 'firstName', 'lastName', 'rate', 'areas'])
 
 const route = useRoute()

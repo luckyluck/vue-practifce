@@ -3,8 +3,6 @@ import { ref, defineEmits } from 'vue'
 
 const emit = defineEmits(['change-filter'])
 
-import BaseCard from '@/components/ui/BaseCard.vue'
-
 const filters = ref({
   frontend: true,
   backend: true,

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { defineProps, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
 import { useCoachesStore } from '@/stores'
 
 const coachesStore = useCoachesStore()

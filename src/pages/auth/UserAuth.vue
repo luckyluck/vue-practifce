@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import BaseDialog from '@/components/ui/BaseDialog.vue'
-import BaseSpinner from '@/components/ui/BaseSpinner.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 import { useAuthStore } from '@/stores'
 
 const authStore = useAuthStore()
