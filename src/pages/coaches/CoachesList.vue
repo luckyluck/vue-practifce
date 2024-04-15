@@ -2,12 +2,18 @@
 import { ref, computed, onMounted } from 'vue'
 import CoachItem from '@/components/coaches/CoachItem.vue'
 import CoachFilter from '@/components/coaches/CoachFilter.vue'
-import { useAuthStore, useCoachesStore } from '@/stores'
+import { type Area, type Coach, useAuthStore, useCoachesStore } from '@/stores'
 
 const coachesStore = useCoachesStore()
 const authStore = useAuthStore()
 
-const activeFilters = ref({
+interface Filters {
+  frontend: boolean
+  backend: boolean
+  career: boolean
+}
+
+const activeFilters = ref<Filters>({
   frontend: true,
   backend: true,
   career: true
@@ -18,9 +24,8 @@ const error = ref(null)
 const filteredCoaches = computed(() => {
   const coaches = coachesStore.coaches
 
-  return coaches.filter((coach: any) =>
-    // @ts-ignore
-    coach.areas.some((area: string) => activeFilters.value[area as any])
+  return coaches.filter((coach: Coach) =>
+    coach.areas.some((area: Area) => activeFilters.value[area])
   )
 })
 const hasCoaches = computed(() => coachesStore.hasCoaches)
@@ -31,8 +36,7 @@ const canRegister = computed(() => isLoggedIn.value && !isCoach.value && !isLoad
 function handleError() {
   error.value = null
 }
-// @ts-ignore
-function setFilters(updatedFilters) {
+function setFilters(updatedFilters: Filters) {
   activeFilters.value = updatedFilters
 }
 
@@ -41,8 +45,7 @@ async function loadCoaches(forceRefresh = false) {
 
   try {
     await coachesStore.loadCoaches(forceRefresh)
-  } catch (e) {
-    // @ts-ignore
+  } catch (e: any) {
     error.value = e.message || 'Something went wrong!'
   }
 

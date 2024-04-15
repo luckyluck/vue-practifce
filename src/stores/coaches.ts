@@ -2,11 +2,21 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
+export type Area = 'frontend' | 'backend' | 'career'
+export interface Coach {
+  id: string
+  firstName: string
+  lastName: string
+  areas: Area[]
+  description: string
+  hourlyRate: number
+}
+
 export const useCoachesStore = defineStore('coaches', () => {
   const auth = useAuthStore()
 
   const lastFetch = ref(0)
-  const coaches = ref([
+  const coaches = ref<Coach[]>([
     {
       id: 'c1',
       firstName: 'Maximilian',

@@ -1,33 +1,27 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { ref, reactive, defineEmits } from 'vue'
 
 const emit = defineEmits(['save-data'])
-const firstName = ref({ value: '', isValid: true })
-const lastName = ref({ value: '', isValid: true })
-const description = ref({ value: '', isValid: true })
-const rate = ref({ value: null, isValid: true })
-const areas = ref({ value: [], isValid: true })
+const firstName = reactive({ value: '', isValid: true })
+const lastName = reactive({ value: '', isValid: true })
+const description = reactive({ value: '', isValid: true })
+const rate = reactive({ value: null, isValid: true })
+const areas = reactive({ value: [], isValid: true })
 const isFormValid = ref(true)
 
-// @ts-ignore
-function clearValidity(input) {
-  input.value.isValid = true
+function clearValidity(input: { value: null | string | number | string[]; isValid: boolean }) {
+  input.isValid = true
 }
 
 function validateForm() {
-  firstName.value.isValid = firstName.value.value !== ''
-  lastName.value.isValid = lastName.value.value !== ''
-  description.value.isValid = description.value.value !== ''
-  // @ts-ignore
-  rate.value.isValid = Number.isInteger(rate.value.value) && rate.value.value > 0
-  areas.value.isValid = areas.value.value.length > 0
+  firstName.isValid = firstName.value !== ''
+  lastName.isValid = lastName.value !== ''
+  description.isValid = description.value !== ''
+  rate.isValid = Number.isInteger(rate.value) && (rate.value ?? 0) > 0
+  areas.isValid = areas.value.length > 0
 
   isFormValid.value =
-    firstName.value.isValid &&
-    firstName.value.isValid &&
-    description.value.isValid &&
-    rate.value.isValid &&
-    areas.value.isValid
+    firstName.isValid && firstName.isValid && description.isValid && rate.isValid && areas.isValid
 }
 
 function submitForm() {
@@ -38,11 +32,11 @@ function submitForm() {
   }
 
   const formData = {
-    firstName: firstName.value.value,
-    lastName: lastName.value.value,
-    description: description.value.value,
-    hourlyRate: rate.value.value,
-    areas: areas.value.value
+    firstName: firstName.value,
+    lastName: lastName.value,
+    description: description.value,
+    hourlyRate: rate.value,
+    areas: areas.value
   }
 
   emit('save-data', formData)

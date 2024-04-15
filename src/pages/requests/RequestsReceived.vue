@@ -19,8 +19,7 @@ async function loadRequests() {
 
   try {
     await requestsStore.loadRequests()
-  } catch (e) {
-    // @ts-ignore
+  } catch (e: any) {
     error.value = e.message || 'Something went wrong!'
   }
 

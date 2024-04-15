@@ -1,19 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// @ts-ignore
 import CoachesList from '@/pages/coaches/CoachesList.vue'
 import NotFound from '@/pages/NotFound.vue'
 import { useAuthStore } from '@/stores'
 
-// @ts-ignore
 const ContactCoach = () => import('@/pages/requests/ContactCoach.vue')
-// @ts-ignore
 const CoachDetails = () => import('@/pages/coaches/CoachDetails.vue')
-// @ts-ignore
 const CoachRegistration = () => import('@/pages/coaches/CoachRegistration.vue')
-// @ts-ignore
 const RequestsReceived = () => import('@/pages/requests/RequestsReceived.vue')
-// @ts-ignore
 const UserAuth = () => import('@/pages/auth/UserAuth.vue')
 
 const router = createRouter({

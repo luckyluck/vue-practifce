@@ -7,8 +7,7 @@ import { useCoachesStore } from '@/stores'
 const coachesStore = useCoachesStore()
 const router = useRouter()
 
-// @ts-ignore
-function saveData(data) {
+function saveData(data: Object) {
   coachesStore.registerCoach(data)
 
   router.replace('/coaches')

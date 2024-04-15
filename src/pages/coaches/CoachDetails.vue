@@ -1,28 +1,23 @@
 <script setup lang="ts">
 import { defineProps, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCoachesStore } from '@/stores'
+import { type Coach, useCoachesStore } from '@/stores'
 
 const coachesStore = useCoachesStore()
 const route = useRoute()
 
 const props = defineProps(['id'])
-const selectedCoach = ref(null)
+const selectedCoach = ref<Coach | undefined>(undefined)
 
 const fullName = computed(
-  // @ts-ignore
   () => `${selectedCoach.value?.firstName} ${selectedCoach.value?.lastName}`
 )
 const coachContactLink = computed(() => `${route.path}/${props.id}/contact`)
-// @ts-ignore
 const areas = computed(() => selectedCoach.value?.areas)
-// @ts-ignore
 const rate = computed(() => selectedCoach.value?.hourlyRate)
-// @ts-ignore
 const description = computed(() => selectedCoach.value?.description)
 
 onMounted(() => {
-  // @ts-ignore
   selectedCoach.value = coachesStore.coaches.find((coach) => coach.id === props.id)
 })
 </script>

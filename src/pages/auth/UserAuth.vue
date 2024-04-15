@@ -45,8 +45,7 @@ async function submitForm() {
     // TODO verify if it still makes sense after introducing guards
     const redirectUrl = route.query.redirect ?? 'coaches'
     router.replace(`/${redirectUrl}`)
-  } catch (e) {
-    // @ts-ignore
+  } catch (e: any) {
     error.value = e.message
   }
 

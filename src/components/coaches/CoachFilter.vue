@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { defineEmits, reactive } from 'vue'
 
 const emit = defineEmits(['change-filter'])
 
-const filters = ref({
+const filters = reactive({
   frontend: true,
   backend: true,
   career: true
 })
 
-// @ts-ignore
-function setFilter(event) {
-  const inputId = event.target.id
-  const isChecked = event.target.checked
+function setFilter(event: Event) {
+  const target = event.target as HTMLInputElement
+  const inputId = target.id as 'frontend' | 'backend' | 'career'
 
-  filters.value = {
-    ...filters.value,
-    [inputId]: isChecked
-  }
-  emit('change-filter', filters.value)
+  filters[inputId] = target.checked
+
+  emit('change-filter', filters)
 }
 </script>
 
